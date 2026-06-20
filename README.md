@@ -28,7 +28,6 @@ The harmful response rate varies a lot by language, from 17.8% to 61.2%, and thi
 
 *Harmful response rate (%) by language and harm category, averaged across all 4 models, n=80 per cell.*
 
-![Heatmap of harmful response rate by language and category](/heatmap_lang_x_category.png)
 
 ## Why this matters
 
