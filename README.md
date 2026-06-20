@@ -2,7 +2,7 @@
 
 A multilingual red-teaming benchmark for LLM safety failures in South African languages.
 
-Built for the [Apart Research Global South AI Safety Hackathon](https://apartresearch.com/sprints/global-south-ais-hackathon-2026-06-19-to-2026-06-21) .
+Built for the [Apart Research Global South AI Safety Hackathon](https://apartresearch.com/sprints/global-south-ais-hackathon-2026-06-19-to-2026-06-21).
 
 **[Read the full paper (PDF)](https://drive.google.com/file/d/1zdn4OL0eRGiiIzlRp58RYzM3HlgtxZhP/view?usp=sharing)**
 
@@ -28,7 +28,7 @@ The harmful response rate varies a lot by language, from 17.8% to 61.2%, and thi
 
 *Harmful response rate (%) by language and harm category, averaged across all 4 models, n=80 per cell.*
 
-![Heatmap of harmful response rate by language and category](figures/heatmap_final.png)
+![Heatmap of harmful response rate by language and category](/heatmap_lang_x_category.png)
 
 ## Why this matters
 
