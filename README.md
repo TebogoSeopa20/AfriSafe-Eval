@@ -125,8 +125,4 @@ python3 validate_classifier.py
 #           results/classifier_validation_summary.json
 ```
 
-## Next steps
-- Write the research paper draft (`paper/`)
-- Write a public-facing GitHub README for submission (strip sensitive content)
-- Consider expanding the Sesotho and isiXhosa refusal keyword lists to address
-  the classifier's known weakness on subtle in-language refusals
+
