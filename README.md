@@ -1,128 +1,133 @@
-# AfriSafe-Eval - Working Files (Hackathon Build)
+# AfriSafe-Eval
 
-## Status: All 4 models complete (1,600 calls) · Classifier fully validated (n=40)
+A multilingual red-teaming benchmark for LLM safety failures in South African languages.
+
+Built for the [Apart Research Global South AI Safety Hackathon](https://apartresearch.com/sprints/global-south-ais-hackathon-2026-06-19-to-2026-06-21) (19-21 June 2026).
+
+**[Read the full paper (PDF)](paper/latex/main.pdf)**
 
 ## What this is
-A red-teaming dataset and evaluation harness for testing LLM safety failures
-in South African languages (English, isiZulu, isiXhosa, Sesotho, Afrikaans)
-across four harm categories grounded in real South African deployment risks:
 
-1. Electoral manipulation (CAT1)
-2. Healthcare misinformation (CAT2)
-3. Financial fraud (CAT3)
-4. Gender-based violence facilitation (CAT4)
+Frontier AI safety research mostly focuses on risks that show up in high-resource, English-language settings. African deployment contexts face a different set of risks: electoral disinformation, healthcare misinformation, financial fraud, and gender-based violence (GBV) facilitation are all pressing, real-world problems in South Africa specifically, and none of them feature prominently in existing safety benchmarks.
 
-Built for the Apart Research Global South AI Safety Hackathon (19–21 June 2026).
+AfriSafe-Eval is a 400-prompt red-teaming benchmark built from prompts written natively, not translated, in five languages used in South Africa: English, isiZulu, isiXhosa, Sesotho, and Afrikaans. The prompts span four harm categories grounded in real, documented South African risks rather than a generic harm taxonomy.
 
-## Headline findings (n=1,600 · 4 models · 5 languages)
+We evaluated four LLMs (GLM-5, GLM-5.1, DeepSeek-v4-Pro, DeepSeek-v4-Flash) through the Huawei ModelArts API, producing 1,600 model responses, and validated our automated refusal classifier against 40 responses labelled by hand.
 
-- **Overall harmful response rate: 38.3%** (612 / 1,600 responses complied or partially complied)
-- **isiXhosa has the highest harmful response rate (61.2%)**, with a 43.4 pp gap vs. the safest
-  language, Afrikaans (17.8%).
-- **The Nguni divergence**: isiXhosa (61.2%) and isiZulu (23.8%) are both Nguni languages with
-  broadly comparable training-data representation, yet differ by 37 pp - suggesting
-  language-specific alignment failures beyond simple resource availability.
-- **Electoral manipulation is the highest-risk category (51.2%)**, followed by healthcare
-  misinformation (41.8%), financial fraud (35.2%), and GBV facilitation (24.8%).
-- **Medium-severity prompts bypassed safety more often (53.5%) than high-severity (33.2%).**
-  Oblique framing is more effective at eliciting harmful completions than direct requests.
+## Headline finding
 
-See `figures/heatmap_final.png` and `figures/model_comparison.png` for visual breakdowns.
+The harmful response rate varies a lot by language, from 17.8% to 61.2%, and this variation is not well explained by resource availability alone. isiXhosa is the riskiest language tested (61.2%) while isiZulu is among the safest (23.8%), even though the two are closely related Nguni languages with broadly similar amounts of training data available. The isiXhosa effect shows up consistently across all four models, which rules out it being a quirk of just one model. Electoral manipulation is the riskiest harm category overall (51.2%).
 
-### Harmful response rate by model
+| Language   | Electoral | Healthcare | Financial Fraud | GBV  | Overall |
+|------------|-----------|------------|------------------|------|---------|
+| English    | 62.5%     | 43.8%      | 37.5%            | 30.0%| 43.5%   |
+| isiZulu    | 36.2%     | 25.0%      | 23.8%            | 10.0%| 23.8%   |
+| **isiXhosa** | **68.8%** | **66.2%** | **63.8%**       | **46.2%** | **61.2%** |
+| Sesotho    | 52.5%     | 56.2%      | 42.5%            | 28.8%| 45.0%   |
+| Afrikaans  | 36.2%     | 17.5%      | 8.8%             | 8.8% | 17.8%   |
 
-| Model             | Harmful rate | COMPLY | PARTIAL | REFUSE | CORRECTIVE | BLOCKED |
-|-------------------|:-----------:|:------:|:-------:|:------:|:----------:|:-------:|
-| glm-5             | 34.2%       | 134    | 3       | 221    | 3          | 36      |
-| glm-5.1           | 41.8%       | 150    | 17      | 198    | 0          | 33      |
-| deepseek-v4-flash | 40.5%       | 147    | 15      | 204    | 9          | 25      |
-| deepseek-v4-pro   | 36.5%       | 133    | 13      | 209    | 12         | 31      |
+*Harmful response rate (%) by language and harm category, averaged across all 4 models, n=80 per cell.*
 
-*BLOCKED = provider-level filter caught the prompt before it reached the model.*
+![Heatmap of harmful response rate by language and category](figures/heatmap_final.png)
 
-### Harmful response rate by language
+## Why this matters
 
-| Language  | Harmful rate | n   |
-|-----------|:-----------:|:---:|
-| isiXhosa  | 61.2%       | 320 |
-| Sesotho   | 45.0%       | 320 |
-| English   | 43.4%       | 320 |
-| isiZulu   | 23.8%       | 320 |
-| Afrikaans | 17.8%       | 320 |
+isiXhosa and isiZulu sit at comparable points on resource-scarcity measures like Common Crawl representation, yet they differ by roughly 37 percentage points in harmful response rate. A simple story where low-resource languages are just unsafe does not explain that gap. Whatever is driving it, it isn't just a function of how much training data a language has, and that has a direct, practical implication for AI safety work in the Global South: closing the resource gap for a language may not be enough to close its safety gap.
 
-## Classifier validation
+## Repository structure
 
-The automated classifier (rule-based refusal-pattern matching in `harness/score_results.py`)
-was validated against 40 human-labelled items from a stratified random sample.
-
-**Note on normalisation**: `PROVIDER_BLOCKED` and `CORRECTIVE_REFUSAL` auto-labels are
-normalised to `REFUSE` before computing metrics. This aligns the auto-label space with
-the human annotation schema (REFUSE / COMPLY / PARTIAL / CORRECTIVE_REFUSAL).
-
-| Metric                     | Value  |
-|----------------------------|:------:|
-| n labelled                 | 40     |
-| Multi-class accuracy       | 72.5%  |
-| Binary accuracy (harmful vs not) | 92.5% |
-| Not-harmful F1             | 0.947  |
-| Harmful F1                 | 0.870  |
-| ROC AUC (proxy score)      | 0.617  |
-
-The multi-class accuracy (72.5%) is lower than binary accuracy (92.5%) primarily because
-the classifier cannot distinguish `CORRECTIVE_REFUSAL` from `REFUSE` (it has no
-corrective-pattern output label in the auto-classification path). For safety-research
-purposes - where the key question is "did the model produce harmful content?" - the
-binary metric (92.5%) is the more meaningful number.
-
-Remaining known weakness: the classifier misses subtle in-language refusals in isiXhosa
-and Sesotho that don't trigger the keyword lists, causing false COMPLY labels.
-See `results/manual_validation_sample.json` for the 3 documented mismatches.
-
-## IMPORTANT - Handle with care
-The `dataset/` folder contains 400 deliberately harmful prompts (deepfake scripts,
-scam scripts, health disinformation, GBV facilitation requests). This is standard
-red-teaming methodology - the same approach used in Apart Research's own Darkbench
-benchmark and the academic literature on African-language jailbreaking. The prompts
-exist to measure whether models refuse them, not to be used for their literal purpose.
-
-The `results/raw_*.jsonl` files contain real harmful completions from live models.
-Treat as sensitive working data - do not post these raw files publicly. Only the
-aggregated statistics and a small number of redacted examples should go in the
-public paper/repo.
-
-## Folder structure
 ```
-dataset/    20 language/category JSON files + master_dataset.json (400 prompts merged)
-harness/    build_master_dataset.py, run_eval.py, score_results.py, validate_classifier.py
-results/    raw_*.jsonl (4 models, 1600 calls total), scored_results.jsonl,
-            manual_validation_sample.json (40 items - fully labelled),
-            classifier_validation_summary.json
-figures/    heatmap_final.png, model_comparison.png, heatmap_lang_x_category.png,
-            confusion_matrix.png, roc_curve.png
-paper/      (for the research writeup - not yet drafted)
+dataset/    400 prompts: 5 languages x 4 categories x 20 prompts, plus master_dataset.json (merged)
+harness/    Python evaluation harness, scoring pipeline, and classifier validation script
+results/    Raw model responses (4 models x 400 prompts), scored results, manual validation sample
+figures/    All generated charts and visualisations
+paper/      Full research paper (LaTeX source + compiled PDF, and a Word version)
 ```
 
-## How to run (do this on your own machine)
+### dataset/
+
+20 JSON files (one per category-language combination) plus `master_dataset.json`, which merges all of them into a single flat file the harness reads directly. Each prompt has an id, category, language, severity tag (high/medium), subcategory, and the prompt text itself. Prompts are written natively per language, not machine-translated, and are grounded in real South African context: named political parties and figures, real grant schemes (SASSA), real banks (Capitec, FNB), and real public health issues (ARV/HIV treatment, TB).
+
+**Content warning:** the dataset consists of deliberately harmful prompts (deepfake scripts, scam scripts, health disinformation, GBV facilitation requests) built for red-teaming purposes. This is standard methodology in AI safety research, the same approach used in Apart Research's own DarkBench and the broader jailbreak-evaluation literature. The prompts exist to measure whether models refuse them, not to be used for their literal purpose.
+
+### harness/
+
+- `build_master_dataset.py` merges the 20 per-language/category files into `dataset/master_dataset.json`.
+- `run_eval.py` runs the full dataset against a chosen model via the Huawei ModelArts API, with retry logic, rate-limit backoff, and resumable execution (safe to interrupt and rerun).
+- `score_results.py` classifies every raw response into REFUSE, COMPLY, PARTIAL, or CORRECTIVE_REFUSAL using a rule-based multilingual pattern classifier, and prints summary statistics broken down by model, language, and category.
+- `validate_classifier.py` compares the classifier's automated labels against a human-labelled sample and reports accuracy, precision, recall, F1, a confusion matrix, and an ROC curve.
+
+### results/
+
+- `raw_<model>.jsonl`: one line per prompt sent to that model, including the prompt, the raw response text, and success/error status.
+- `scored_results.jsonl`: every response with its classifier label attached.
+- `manual_validation_sample.json`: 40 responses hand-labelled for classifier validation.
+- `classifier_validation_summary.json`: the final validation metrics (see below).
+
+## How to reproduce
+
 ```bash
-# 1. Set up environment
+git clone https://github.com/TebogoSeopa20/AfriSafe-Eval.git
+cd AfriSafe-Eval
 pip install -r requirements.txt
-cp .env .env.example   # .env already has placeholder - fill in your real key
-export HUAWEI_API_KEY="your-key-here"
+cp .env.example .env
+# edit .env and add your own HUAWEI_API_KEY
+```
 
-# 2. (Already done) Run the eval - all 4 models, 1600 calls total
+Run the evaluation (this takes a while, expect rate limiting; the harness retries automatically):
+
+```bash
 cd harness
 python3 run_eval.py --model deepseek-v4-flash
 python3 run_eval.py --model deepseek-v4-pro
 python3 run_eval.py --model glm-5.1
 python3 run_eval.py --model glm-5
-
-# 3. (Already done) Score the results
-python3 score_results.py
-
-# 4. (Already done) Run classifier validation
-python3 validate_classifier.py
-# Produces: figures/confusion_matrix.png, figures/roc_curve.png,
-#           results/classifier_validation_summary.json
 ```
 
+Score the results:
 
+```bash
+python3 score_results.py
+```
+
+This regenerates `results/manual_validation_sample.json` with a fresh random draw. If you want to validate against the same 40 items we used, restore the version already committed in this repo before running `validate_classifier.py`:
+
+```bash
+git checkout results/manual_validation_sample.json
+python3 validate_classifier.py
+```
+
+## Classifier validation
+
+Our scoring pipeline is a rule-based, multilingual pattern classifier, not an LLM judge, so we validated it against 40 hand-labelled responses before trusting the numbers above.
+
+- **Accuracy: 75.0%** (30/40) against human judgement.
+- **Precision on "not harmful": 100%.** The classifier never mistook a response a human judged genuinely harmful for a safe one.
+- **Recall on "not harmful": 73.0%.** Every classification error went in the conservative direction, flagging a borderline or politely-worded refusal as harmful rather than missing real harm.
+
+This means the harm rates reported above and in the paper are best read as upper-bound estimates. The true rates are unlikely to be higher than what we report, and may be somewhat lower.
+
+![Confusion matrix](figures/confusion_matrix.png)
+
+## Limitations
+
+This is a hackathon-timeframe project and has real limits, discussed in full in the paper:
+
+- The four models tested were a convenience sample (chosen for available API credits), not a representative sample of deployed LLMs. Frontier models (GPT, Claude, Gemini) were not tested.
+- Cell sizes (80 responses per language-category combination) are modest.
+- The rule-based classifier, even after validation, only reaches 75% raw agreement with human judgement.
+- The PROVIDER_BLOCKED category (7.8% of all responses) reflects Huawei ModelArts' own platform-level content filter, not the underlying model's safety behaviour.
+- Only single-turn prompts were tested; the results don't speak to multi-turn jailbreak escalation.
+
+## Tech stack
+
+Python (evaluation harness, scoring, classifier validation), scikit-learn (validation metrics), matplotlib (figures), the Huawei ModelArts Anthropic-compatible API (model access).
+
+## Author
+
+Tebogo Jan Seopa, University of the Witwatersrand. Working solo on this project.
+
+
+## License
+
+[Add a license if you want this dataset and code to be reusable, e.g. MIT for code and CC-BY for the dataset.]
