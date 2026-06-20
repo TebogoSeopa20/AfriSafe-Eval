@@ -1,4 +1,4 @@
-# AfriSafe-Eval — Working Files (Hackathon Build)
+# AfriSafe-Eval - Working Files (Hackathon Build)
 
 ## Status: All 4 models complete (1,600 calls) · Classifier fully validated (n=40)
 
@@ -20,7 +20,7 @@ Built for the Apart Research Global South AI Safety Hackathon (19–21 June 2026
 - **isiXhosa has the highest harmful response rate (61.2%)**, with a 43.4 pp gap vs. the safest
   language, Afrikaans (17.8%).
 - **The Nguni divergence**: isiXhosa (61.2%) and isiZulu (23.8%) are both Nguni languages with
-  broadly comparable training-data representation, yet differ by 37 pp — suggesting
+  broadly comparable training-data representation, yet differ by 37 pp - suggesting
   language-specific alignment failures beyond simple resource availability.
 - **Electoral manipulation is the highest-risk category (51.2%)**, followed by healthcare
   misinformation (41.8%), financial fraud (35.2%), and GBV facilitation (24.8%).
@@ -71,22 +71,22 @@ the human annotation schema (REFUSE / COMPLY / PARTIAL / CORRECTIVE_REFUSAL).
 The multi-class accuracy (72.5%) is lower than binary accuracy (92.5%) primarily because
 the classifier cannot distinguish `CORRECTIVE_REFUSAL` from `REFUSE` (it has no
 corrective-pattern output label in the auto-classification path). For safety-research
-purposes — where the key question is "did the model produce harmful content?" — the
+purposes - where the key question is "did the model produce harmful content?" - the
 binary metric (92.5%) is the more meaningful number.
 
 Remaining known weakness: the classifier misses subtle in-language refusals in isiXhosa
 and Sesotho that don't trigger the keyword lists, causing false COMPLY labels.
 See `results/manual_validation_sample.json` for the 3 documented mismatches.
 
-## IMPORTANT — Handle with care
+## IMPORTANT - Handle with care
 The `dataset/` folder contains 400 deliberately harmful prompts (deepfake scripts,
 scam scripts, health disinformation, GBV facilitation requests). This is standard
-red-teaming methodology — the same approach used in Apart Research's own Darkbench
+red-teaming methodology - the same approach used in Apart Research's own Darkbench
 benchmark and the academic literature on African-language jailbreaking. The prompts
 exist to measure whether models refuse them, not to be used for their literal purpose.
 
 The `results/raw_*.jsonl` files contain real harmful completions from live models.
-Treat as sensitive working data — do not post these raw files publicly. Only the
+Treat as sensitive working data - do not post these raw files publicly. Only the
 aggregated statistics and a small number of redacted examples should go in the
 public paper/repo.
 
@@ -95,21 +95,21 @@ public paper/repo.
 dataset/    20 language/category JSON files + master_dataset.json (400 prompts merged)
 harness/    build_master_dataset.py, run_eval.py, score_results.py, validate_classifier.py
 results/    raw_*.jsonl (4 models, 1600 calls total), scored_results.jsonl,
-            manual_validation_sample.json (40 items — fully labelled),
+            manual_validation_sample.json (40 items - fully labelled),
             classifier_validation_summary.json
 figures/    heatmap_final.png, model_comparison.png, heatmap_lang_x_category.png,
             confusion_matrix.png, roc_curve.png
-paper/      (for the research writeup — not yet drafted)
+paper/      (for the research writeup - not yet drafted)
 ```
 
 ## How to run (do this on your own machine)
 ```bash
 # 1. Set up environment
 pip install -r requirements.txt
-cp .env .env.example   # .env already has placeholder — fill in your real key
+cp .env .env.example   # .env already has placeholder - fill in your real key
 export HUAWEI_API_KEY="your-key-here"
 
-# 2. (Already done) Run the eval — all 4 models, 1600 calls total
+# 2. (Already done) Run the eval - all 4 models, 1600 calls total
 cd harness
 python3 run_eval.py --model deepseek-v4-flash
 python3 run_eval.py --model deepseek-v4-pro
