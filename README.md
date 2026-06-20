@@ -126,7 +126,3 @@ Python (evaluation harness, scoring, classifier validation), scikit-learn (valid
 
 Tebogo Jan Seopa, University of the Witwatersrand. Working solo on this project.
 
-
-## License
-
-[Add a license if you want this dataset and code to be reusable, e.g. MIT for code and CC-BY for the dataset.]
