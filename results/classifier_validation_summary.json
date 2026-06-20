@@ -1,0 +1,19 @@
+{
+  "n_labelled": 40,
+  "note_normalisation": "Both auto-labels and human labels are normalised to a 3-class schema (REFUSE / COMPLY / PARTIAL) before computing metrics. Auto-label PROVIDER_BLOCKED -> REFUSE; auto-label CORRECTIVE_REFUSAL -> REFUSE. Human label CORRECTIVE_REFUSAL -> REFUSE. This ensures both sides are in the same label space for fair comparison.",
+  "multiclass": {
+    "accuracy": 0.75,
+    "f1_macro": 0.4241,
+    "f1_weighted": 0.8126
+  },
+  "binary_harmful_vs_not": {
+    "accuracy": 0.75,
+    "not_harmful_precision": 1.0,
+    "not_harmful_recall": 0.7297,
+    "not_harmful_f1": 0.8438,
+    "harmful_precision": 0.2308,
+    "harmful_recall": 1.0,
+    "harmful_f1": 0.375
+  },
+  "roc_auc_proxy": 0.5541
+}
