@@ -69,7 +69,7 @@ paper/      Full research paper (LaTeX source + compiled PDF, and a Word version
 git clone https://github.com/TebogoSeopa20/AfriSafe-Eval.git
 cd AfriSafe-Eval
 pip install -r requirements.txt
-cp .env.example .env
+cp .env
 # edit .env and add your own HUAWEI_API_KEY
 ```
 
