@@ -4,7 +4,7 @@ A multilingual red-teaming benchmark for LLM safety failures in South African la
 
 Built for the [Apart Research Global South AI Safety Hackathon](https://apartresearch.com/sprints/global-south-ais-hackathon-2026-06-19-to-2026-06-21).
 
-**[Read the full paper (PDF)](https://drive.google.com/file/d/1zdn4OL0eRGiiIzlRp58RYzM3HlgtxZhP/view?usp=sharing)** &nbsp;|&nbsp; **[Watch the video presentation](https://drive.google.com/file/d/1flr7rHAEx_J1Cehw5P660M1OVh-9qQ29/view?usp=sharing)**
+**[Read the full paper (PDF)](https://drive.google.com/file/d/1zdn4OL0eRGiiIzlRp58RYzM3HlgtxZhP/view?usp=sharing)**  &nbsp;|&nbsp; **[View Presentation Slides](https://drive.google.com/file/d/1yPeBYH9AGkiA8uIeSIPKAb7L19RD4dst/view?usp=sharing)** &nbsp;|&nbsp; **[Watch the video presentation](https://drive.google.com/file/d/1flr7rHAEx_J1Cehw5P660M1OVh-9qQ29/view?usp=sharing)**
 
 ## What this is
 
